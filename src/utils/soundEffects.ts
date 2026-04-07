@@ -43,29 +43,62 @@ export function unlockAudio() {
   console.log("🔊 Audio unlocked!");
 }
 
-// ============ "FAHH" MEME SOUND (dramatic choir hit) ============
-// Recreates the trending "Fahh" sound effect from SowaSFX
+// ============ "FAHH" MEME SOUND (Viral Version) ============
+// This uses the authentic viral "Fahh" sound from the YouTube Short provided
+const FAHH_URL = "https://www.myinstants.com/media/sounds/faaah.mp3";
+let fahhAudio: HTMLAudioElement | null = null;
+
 export function playFahh() {
+  if (!fahhAudio) {
+    fahhAudio = new Audio(FAHH_URL);
+    fahhAudio.volume = 0.8;
+  }
+  
+  // Clone and play to allow rapid repeated triggers
+  const playInstance = fahhAudio.cloneNode() as HTMLAudioElement;
+  playInstance.volume = 0.8;
+  playInstance.play().catch(e => {
+    console.warn("Failed to play authentic FAHH, falling back to synthetic:", e);
+    playSyntheticFahh();
+  });
+}
+
+// ============ NEW TRENDING SOUNDS ============
+const MEME_URLS = {
+  emotional: "https://www.myinstants.com/media/sounds/emotional-damage-meme.mp3",
+  what: "https://www.myinstants.com/media/sounds/what-the-hell-is-even-that-meme.mp3",
+  omg: "https://www.myinstants.com/media/sounds/oh-my-god-meme.mp3",
+  huh: "https://www.myinstants.com/media/sounds/huh.mp3",
+  shootingStars: "https://www.myinstants.com/media/sounds/shooting-stars.mp3",
+};
+
+const memeAudios: Record<string, HTMLAudioElement> = {};
+
+function playMeme(key: keyof typeof MEME_URLS, volume = 0.8) {
+  if (!memeAudios[key]) {
+    memeAudios[key] = new Audio(MEME_URLS[key]);
+  }
+  const playInstance = memeAudios[key].cloneNode() as HTMLAudioElement;
+  playInstance.volume = volume;
+  playInstance.play().catch(e => console.error(`Error playing ${key}:`, e));
+  return playInstance;
+}
+
+export const playEmotionalDamage = () => playMeme("emotional");
+export const playWhatTheHell = () => playMeme("what");
+export const playOMG = () => playMeme("omg");
+export const playHuh = () => playMeme("huh");
+export const playShootingStars = () => playMeme("shootingStars", 1.0);
+
+
+// Keep synthetic version as a robust fallback
+function playSyntheticFahh() {
   const ctx = getAudioContext();
   const out = getOutput();
   const now = ctx.currentTime;
 
-  // === Layer 1: Deep sub-bass rumble (the "body" of FAHH) ===
-  const sub = ctx.createOscillator();
-  const subGain = ctx.createGain();
-  sub.type = "sine";
-  sub.frequency.setValueAtTime(55, now);
-  sub.frequency.exponentialRampToValueAtTime(35, now + 0.8);
-  subGain.gain.setValueAtTime(1.0, now);
-  subGain.gain.setValueAtTime(1.0, now + 0.1);
-  subGain.gain.exponentialRampToValueAtTime(0.01, now + 0.9);
-  sub.connect(subGain);
-  subGain.connect(out);
-  sub.start(now);
-  sub.stop(now + 0.9);
-
-  // === Layer 2: Mid-tone "FAH" vocal formant ===
-  const vowelFreqs = [250, 500, 750]; // "AH" vowel formants
+  // === Layer 1: Mid-tone "FAH" vocal formant ===
+  const vowelFreqs = [250, 500, 750]; 
   vowelFreqs.forEach((freq, i) => {
     const osc = ctx.createOscillator();
     const gain = ctx.createGain();
@@ -90,59 +123,9 @@ export function playFahh() {
     osc.start(now);
     osc.stop(now + 0.7);
   });
-
-  // === Layer 3: Dramatic chord stab (makes it cinematic) ===
-  const chordNotes = [110, 138.59, 164.81]; // A2, C#3, E3 (A major)
-  chordNotes.forEach((freq) => {
-    const osc = ctx.createOscillator();
-    const gain = ctx.createGain();
-    osc.type = "triangle";
-    osc.frequency.value = freq;
-    gain.gain.setValueAtTime(0, now);
-    gain.gain.linearRampToValueAtTime(0.25, now + 0.01);
-    gain.gain.setValueAtTime(0.25, now + 0.08);
-    gain.gain.exponentialRampToValueAtTime(0.001, now + 0.8);
-    osc.connect(gain);
-    gain.connect(out);
-    osc.start(now);
-    osc.stop(now + 0.8);
-  });
-
-  // === Layer 4: Noise burst impact (the "hit") ===
-  const noiseLen = ctx.sampleRate * 0.2;
-  const noiseBuf = ctx.createBuffer(1, noiseLen, ctx.sampleRate);
-  const noiseData = noiseBuf.getChannelData(0);
-  for (let i = 0; i < noiseLen; i++) {
-    noiseData[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / noiseLen, 4);
-  }
-  const noiseSrc = ctx.createBufferSource();
-  noiseSrc.buffer = noiseBuf;
-  const noiseFilter = ctx.createBiquadFilter();
-  noiseFilter.type = "lowpass";
-  noiseFilter.frequency.value = 500;
-  const noiseGain = ctx.createGain();
-  noiseGain.gain.setValueAtTime(0.7, now);
-  noiseGain.gain.exponentialRampToValueAtTime(0.01, now + 0.2);
-  noiseSrc.connect(noiseFilter);
-  noiseFilter.connect(noiseGain);
-  noiseGain.connect(out);
-  noiseSrc.start(now);
-
-  // === Layer 5: Reverb tail (sustained "ahhh" fade) ===
-  const reverbOsc = ctx.createOscillator();
-  const reverbGain = ctx.createGain();
-  reverbOsc.type = "sine";
-  reverbOsc.frequency.value = 110;
-  reverbGain.gain.setValueAtTime(0, now + 0.3);
-  reverbGain.gain.linearRampToValueAtTime(0.15, now + 0.35);
-  reverbGain.gain.exponentialRampToValueAtTime(0.001, now + 1.2);
-  reverbOsc.connect(reverbGain);
-  reverbGain.connect(out);
-  reverbOsc.start(now);
-  reverbOsc.stop(now + 1.2);
 }
 
-// Alias: playVineBoom now triggers the FAHH sound
+// Alias: playVineBoom now triggers the authentic FAHH sound
 export const playVineBoom = playFahh;
 
 // ============ LAUGH TRACK ============
@@ -394,7 +377,19 @@ export function playDing() {
 }
 
 // ============ RANDOM FUNNY SOUND ============
-const funnySounds = [playFahh, playFahh, playLaugh, playHonk, playBoing, playWhoopee, playPop];
+const funnySounds = [
+  playFahh, 
+  playFahh, 
+  playLaugh, 
+  playHonk, 
+  playBoing, 
+  playWhoopee, 
+  playPop,
+  playEmotionalDamage,
+  playWhatTheHell,
+  playOMG,
+  playHuh
+];
 
 export function playRandomFunny() {
   const fn = funnySounds[Math.floor(Math.random() * funnySounds.length)];

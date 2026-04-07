@@ -7,10 +7,9 @@ import RunawayButton from "./components/RunawayButton";
 import GravityCards from "./components/GravityCards";
 import PrankForm from "./components/PrankForm";
 import FakeNotification from "./components/FakeNotification";
-import DarkModeOverlay from "./components/DarkModeOverlay";
 import GrandFinale from "./components/GrandFinale";
 import FloatingHomeButton from "./components/FloatingHomeButton";
-import CursorChaos from "./components/CursorChaos";
+
 import ImpossibleCaptcha from "./components/ImpossibleCaptcha";
 import FakeBSOD from "./components/FakeBSOD";
 import HonestCookieBanner from "./components/HonestCookieBanner";
@@ -18,7 +17,7 @@ import KonamiEasterEgg from "./components/KonamiEasterEgg";
 import AntiGravityScroll from "./components/AntiGravityScroll";
 import GaslightingText from "./components/GaslightingText";
 import PhantomTyper from "./components/PhantomTyper";
-import ShrinkingPage from "./components/ShrinkingPage";
+
 import ClippyAssistant from "./components/ClippyAssistant";
 import RightClickMenu from "./components/RightClickMenu";
 import PrankWheel from "./components/PrankWheel";
@@ -27,7 +26,6 @@ import "./App.css";
 export default function App() {
   const [loading, setLoading] = useState(true);
   const [heroEntered, setHeroEntered] = useState(false);
-  const [darkMode, setDarkMode] = useState(false);
   const [showFinale, setShowFinale] = useState(false);
   const [currentSection, setCurrentSection] = useState("hero");
 
@@ -35,13 +33,7 @@ export default function App() {
     setLoading(false);
   }, []);
 
-  const handleDarkModeToggle = () => {
-    setDarkMode(true);
-  };
 
-  const handleDarkModeComplete = useCallback(() => {
-    setDarkMode(false);
-  }, []);
 
   // Track current section on scroll
   useEffect(() => {
@@ -52,7 +44,7 @@ export default function App() {
         if (el) {
           const rect = el.getBoundingClientRect();
           if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
-            setCurrentSection(sectionId);
+            if (currentSection !== sectionId) setCurrentSection(sectionId);
             break;
           }
         }
@@ -104,12 +96,11 @@ export default function App() {
         >
           {/* Navigation */}
           <ShuffleNav
-            onDarkModeToggle={handleDarkModeToggle}
             currentSection={currentSection}
           />
 
           {/* === NEW PRANK LAYERS === */}
-          <CursorChaos />
+
           <ImpossibleCaptcha />
           <FakeBSOD />
           <HonestCookieBanner />
@@ -117,18 +108,14 @@ export default function App() {
           <AntiGravityScroll />
           <GaslightingText />
           <PhantomTyper />
-          <ShrinkingPage />
+
           <ClippyAssistant />
           <RightClickMenu />
 
-          {/* Floating Runaway Home Button */}
-          <FloatingHomeButton />
+
 
           {/* Fake System Notification */}
           <FakeNotification />
-
-          {/* Dark Mode Overlay */}
-          <DarkModeOverlay active={darkMode} onComplete={handleDarkModeComplete} />
 
           {/* Hero Section */}
           <section id="hero" className="section hero-section">
@@ -274,6 +261,9 @@ export default function App() {
           </footer>
         </motion.div>
       )}
+
+      {/* Floating Runaway Home Button — rendered outside main-content so it floats over everything */}
+      {!loading && <FloatingHomeButton />}
     </div>
   );
 }

@@ -35,16 +35,16 @@ export default function FakeLoader({ onComplete }: FakeLoaderProps) {
           setStuck(true);
           return 99.7;
         }
-        // Slow down as we approach 100
-        const increment = prev < 60 ? 2 : prev < 90 ? 0.8 : 0.2;
+        // Speed up the loading process
+        const increment = prev < 60 ? 5 : prev < 90 ? 2 : 0.5;
         return Math.min(prev + increment, 99.7);
       });
-    }, 50);
+    }, 30);
 
     // Status message rotation
     msgInterval = setInterval(() => {
       setStatusText(statusMessages[Math.floor(Math.random() * statusMessages.length)]);
-    }, 1200);
+    }, 800);
 
     return () => {
       clearInterval(interval);
@@ -52,19 +52,19 @@ export default function FakeLoader({ onComplete }: FakeLoaderProps) {
     };
   }, []);
 
-  // When stuck at 99.7%, wait 2.5s then jump to 420%
+  // When stuck at 99.7%, wait briefly then jump to 420%
   useEffect(() => {
     if (stuck) {
-      setStatusText("So close... just one more byte...");
+      setStatusText("So close... almost there!");
       const timer = setTimeout(() => {
         setOverloaded(true);
-        setStatusText("🎉 420% LOADED — TOO MUCH FUN!!!");
+        setStatusText("🎉 420% LOADED — LETS GO!!!");
 
-        // Finish after showing the joke
+        // Finish faster after showing the joke
         setTimeout(() => {
           onComplete();
-        }, 1500);
-      }, 2500);
+        }, 800);
+      }, 500);
 
       return () => clearTimeout(timer);
     }
@@ -129,7 +129,7 @@ export default function FakeLoader({ onComplete }: FakeLoaderProps) {
         {/* Floating particles */}
         {[...Array(20)].map((_, i) => (
           <motion.div
-            key={i}
+            key={`loader-particle-${i}`}
             className="loader-particle"
             style={{
               left: `${Math.random() * 100}%`,

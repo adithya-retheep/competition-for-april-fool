@@ -12,7 +12,6 @@ export default function CursorChaos() {
   const [showMessage, setShowMessage] = useState(false);
   const trailId = useRef(0);
   const realMouseRef = useRef({ x: 0, y: 0 });
-  const phaseTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   const showPhaseMsg = useCallback((msg: string) => {
     setPhaseMessage(msg);
@@ -141,12 +140,11 @@ export default function CursorChaos() {
         <motion.div
           style={{
             position: "fixed",
-            left: mousePos.x,
-            top: mousePos.y,
+            left: 0,
+            top: 0,
             zIndex: 9999,
             pointerEvents: "none",
             fontSize: "24px",
-            transform: "translate(-2px, -2px)",
           }}
           animate={{ x: mousePos.x, y: mousePos.y }}
           transition={{ type: "spring", stiffness: 500, damping: 28 }}

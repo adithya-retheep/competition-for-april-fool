@@ -15,12 +15,12 @@ export default function DarkModeOverlay({ active, onComplete }: DarkModeOverlayP
       setPhase("dark");
       playRecordScratch();
       // Phase 1: Pitch black for 1.5s
-      const t1 = setTimeout(() => { setPhase("flip"); playLaugh(); }, 1500);
-      // Phase 2: Flip everything for 1.5s
+      const t1 = setTimeout(() => { setPhase("flip"); playLaugh(); }, 600);
+      // Phase 2: Flip everything for 0.9s (total 1.5s)
       const t2 = setTimeout(() => {
         setPhase("done");
         onComplete();
-      }, 3500);
+      }, 1500);
 
       return () => {
         clearTimeout(t1);

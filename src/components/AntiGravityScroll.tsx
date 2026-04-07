@@ -43,14 +43,16 @@ export default function AntiGravityScroll() {
         }, 1000);
       }
 
-      // Subtle rotation
+      // Subtle rotation — apply to #root, NOT body (body transforms break position:fixed)
       if (scrollCount.current % 15 === 0) {
-        const body = document.body;
-        body.style.transition = "transform 2s ease";
-        body.style.transform = `rotate(${(Math.random() - 0.5) * 2}deg)`;
-        setTimeout(() => {
-          body.style.transform = "rotate(0deg)";
-        }, 3000);
+        const root = document.getElementById("root");
+        if (root) {
+          root.style.transition = "transform 2s ease";
+          root.style.transform = `rotate(${(Math.random() - 0.5) * 2}deg)`;
+          setTimeout(() => {
+            root.style.transform = "rotate(0deg)";
+          }, 3000);
+        }
       }
     };
 
@@ -59,7 +61,8 @@ export default function AntiGravityScroll() {
     return () => {
       window.removeEventListener("wheel", handleWheel);
       if (reverseTimeout) clearTimeout(reverseTimeout);
-      document.body.style.transform = "rotate(0deg)";
+      const root = document.getElementById("root");
+      if (root) root.style.transform = "";
     };
   }, []);
 

@@ -162,9 +162,9 @@ body {
   align-items: center;
   justify-content: space-between;
   padding: 1rem 2rem;
-  background: rgba(5, 5, 16, 0.8);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  background: rgba(5, 5, 16, 0.85);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid var(--glass-border);
 }
 
@@ -1058,8 +1058,7 @@ body {
   position: fixed;
   inset: 0;
   z-index: 6000;
-  background: rgba(0, 0, 0, 0.7);
-  backdrop-filter: blur(8px);
+  background: rgba(0, 0, 0, 0.85);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1428,8 +1427,7 @@ body {
   left: 50%;
   transform: translateX(-50%);
   z-index: 4000;
-  background: rgba(15, 15, 30, 0.95);
-  backdrop-filter: blur(20px);
+  background: rgba(15, 15, 30, 0.98);
   border: 1px solid var(--glass-border);
   border-radius: var(--radius-lg);
   padding: 1.5rem 2rem;
@@ -1857,4 +1855,51 @@ body.retro-mode .gradient-text {
 
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.2);
+}
+/* ============ GALAXY MEME ============ */
+.galaxy-meme-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  background: radial-gradient(circle at center, #0a0a20 0%, #000000 100%);
+  overflow: hidden;
+  pointer-events: none;
+}
+
+.stars-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.star {
+  position: absolute;
+  background: white;
+  border-radius: 50%;
+  opacity: 0;
+  animation: star-flicker 2s infinite ease-in-out;
+}
+
+@keyframes star-flicker {
+  0% { opacity: 0; transform: scale(0.5); }
+  50% { opacity: 1; transform: scale(1.2); }
+  100% { opacity: 0; transform: scale(0.5); }
+}
+
+.cosmic-glow {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 80vw;
+  height: 80vh;
+  background: radial-gradient(circle, rgba(123, 104, 238, 0.2) 0%, rgba(255, 0, 255, 0.1) 40%, transparent 70%);
+  filter: blur(60px);
+  z-index: -1;
+}
+
+.grand-finale {
+  position: relative;
+  z-index: 10;
 }

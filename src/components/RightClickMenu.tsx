@@ -39,26 +39,33 @@ export default function RightClickMenu() {
 
   const triggerAction = (action: string) => {
     setVisible(false);
+    const root = document.getElementById("root");
 
     switch (action) {
       case "shake":
         playBoing();
-        document.body.style.animation = "menuShake 0.5s ease";
-        setTimeout(() => { document.body.style.animation = ""; }, 500);
+        if (root) {
+          root.style.animation = "menuShake 0.5s ease";
+          setTimeout(() => { root.style.animation = ""; }, 500);
+        }
         break;
 
       case "flip":
         playVineBoom();
-        document.body.style.transition = "transform 1s ease";
-        document.body.style.transform = "scaleX(-1)";
-        setTimeout(() => { document.body.style.transform = "scaleX(1)"; }, 2000);
+        if (root) {
+          root.style.transition = "transform 1s ease";
+          root.style.transform = "scaleX(-1)";
+          setTimeout(() => { root.style.transform = ""; }, 2000);
+        }
         break;
 
       case "spin":
         playBoing();
-        document.body.style.transition = "transform 1s ease";
-        document.body.style.transform = "rotate(360deg)";
-        setTimeout(() => { document.body.style.transition = "none"; document.body.style.transform = "rotate(0deg)"; }, 1000);
+        if (root) {
+          root.style.transition = "transform 1s ease";
+          root.style.transform = "rotate(360deg)";
+          setTimeout(() => { root.style.transition = "none"; root.style.transform = ""; }, 1000);
+        }
         break;
 
       case "emoji-rain":
@@ -78,11 +85,13 @@ export default function RightClickMenu() {
 
       case "shrink":
         playPop();
-        document.body.style.transition = "transform 0.5s ease";
-        document.body.style.transform = "scale(0.5)";
-        setTimeout(() => {
-          document.body.style.transform = "scale(1)";
-        }, 1500);
+        if (root) {
+          root.style.transition = "transform 0.5s ease";
+          root.style.transform = "scale(0.5)";
+          setTimeout(() => {
+            root.style.transform = "";
+          }, 1500);
+        }
         break;
 
       case "boom":

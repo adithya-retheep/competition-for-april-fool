@@ -1,7 +1,14 @@
-import { useEffect, useRef } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence } from "framer-motion";
 import confetti from "canvas-confetti";
-import { playFanfare } from "../utils/soundEffects";
+import { 
+  playFanfare, 
+  playShootingStars, 
+  playEmotionalDamage, 
+  playWhatTheHell, 
+  playOMG,
+  playFahh 
+} from "../utils/soundEffects";
 
 interface GrandFinaleProps {
   triggered: boolean;
@@ -9,27 +16,42 @@ interface GrandFinaleProps {
 
 export default function GrandFinale({ triggered }: GrandFinaleProps) {
   const hasRun = useRef(false);
+  const [showGalaxy, setShowGalaxy] = useState(false);
 
   useEffect(() => {
     if (triggered && !hasRun.current) {
       hasRun.current = true;
 
-      // Fire confetti from multiple angles
-      const duration = 5000;
-      const end = Date.now() + duration;
+      // Start the sequence
+      playFanfare();
+      
+      // Delay galaxy meme
+      setTimeout(() => {
+        setShowGalaxy(true);
+        playShootingStars();
+      }, 2000);
 
+      // Random meme interjections
+      setTimeout(playEmotionalDamage, 5000);
+      setTimeout(playWhatTheHell, 8000);
+      setTimeout(playOMG, 11000);
+      setTimeout(playFahh, 14000);
+
+      // Fire confetti from multiple angles
+      const duration = 15000;
+      const end = Date.now() + duration;
       const colors = ["#00ffff", "#ff00ff", "#ffd700", "#ff6b35", "#7b68ee"];
 
       const frame = () => {
         confetti({
-          particleCount: 5,
+          particleCount: 3,
           angle: 60,
           spread: 55,
           origin: { x: 0 },
           colors,
         });
         confetti({
-          particleCount: 5,
+          particleCount: 3,
           angle: 120,
           spread: 55,
           origin: { x: 1 },
@@ -49,7 +71,6 @@ export default function GrandFinale({ triggered }: GrandFinaleProps) {
         colors,
       });
 
-      playFanfare();
       frame();
     }
   }, [triggered]);
@@ -63,6 +84,41 @@ export default function GrandFinale({ triggered }: GrandFinaleProps) {
       animate={{ opacity: 1 }}
       transition={{ duration: 1 }}
     >
+      <AnimatePresence>
+        {showGalaxy && (
+          <motion.div 
+            className="galaxy-meme-overlay"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+          >
+            <div className="stars-container">
+              {[...Array(100)].map((_, i) => (
+                <div 
+                  key={i} 
+                  className="star" 
+                  style={{
+                    left: `${Math.random() * 100}%`,
+                    top: `${Math.random() * 100}%`,
+                    animationDelay: `${Math.random() * 3}s`,
+                    width: `${Math.random() * 3}px`,
+                    height: `${Math.random() * 3}px`,
+                  }}
+                />
+              ))}
+            </div>
+            <motion.div 
+              className="cosmic-glow"
+              animate={{
+                scale: [1, 1.5, 1],
+                opacity: [0.3, 0.6, 0.3],
+              }}
+              transition={{ duration: 5, repeat: Infinity }}
+            />
+          </motion.div>
+        )}
+      </AnimatePresence>
+
       <motion.div
         className="finale-content"
         initial={{ scale: 0, rotate: -180 }}
@@ -71,7 +127,10 @@ export default function GrandFinale({ triggered }: GrandFinaleProps) {
       >
         <motion.div
           className="finale-emojis"
-          animate={{ y: [0, -20, 0] }}
+          animate={{ 
+            y: [0, -20, 0],
+            rotate: [0, 10, -10, 0]
+          }}
           transition={{ repeat: Infinity, duration: 2 }}
         >
           🎭 🎉 🤡 🎊 🃏
@@ -81,6 +140,11 @@ export default function GrandFinale({ triggered }: GrandFinaleProps) {
           <motion.span
             animate={{
               backgroundPosition: ["0% 50%", "100% 50%", "0% 50%"],
+              textShadow: [
+                "0 0 20px rgba(0,255,255,0.5)",
+                "0 0 40px rgba(255,0,255,0.8)",
+                "0 0 20px rgba(0,255,255,0.5)"
+              ]
             }}
             transition={{ repeat: Infinity, duration: 3 }}
             style={{
@@ -90,11 +154,13 @@ export default function GrandFinale({ triggered }: GrandFinaleProps) {
               WebkitTextFillColor: "transparent",
             }}
           >
-            YOU'VE BEEN PRANKED!
+            {showGalaxy ? "ASCENDING TO FOOLHOOD..." : "YOU'VE BEEN PRANKED!"}
           </motion.span>
         </h1>
 
-        <p className="finale-subtitle">Happy April Fools Day! 🎉</p>
+        <p className="finale-subtitle">
+          {showGalaxy ? "You hit the cosmic jackpot of stupid! 🌌" : "Happy April Fools Day! 🎉"}
+        </p>
 
         <div className="prank-recap">
           <h3>Your Prank Recap:</h3>
@@ -102,21 +168,18 @@ export default function GrandFinale({ triggered }: GrandFinaleProps) {
             <li>✅ Survived the infinite loader</li>
             <li>✅ Caught the runaway button</li>
             <li>✅ Witnessed the gravity flip</li>
-            <li>✅ Fell for the dark mode trick</li>
             <li>✅ Got pranked by the form</li>
             <li>✅ Clicked the fake notification</li>
-            <li>✅ Survived cursor chaos 🖱️</li>
             <li>✅ Failed the impossible CAPTCHA 🧩</li>
             <li>✅ Didn't panic at the fake crash 💀</li>
             <li>✅ Accepted the honest cookies 🍪</li>
             <li>✅ Scrolled against gravity 🌌</li>
             <li>✅ Got gaslighted by changing text 👀</li>
             <li>✅ Met the ghost typist 👻</li>
-            <li>✅ Noticed the shrinking page 🔍</li>
             <li>✅ Survived Clippy's return 📎</li>
             <li>✅ Discovered the secret menu 🍝</li>
             <li>✅ Spun the Wheel of Misfortune 🎡</li>
-            <li>✅ Made it to the grand finale!</li>
+            <li>✅ Reached Cosmic Enlightenment 🌠</li>
           </ul>
         </div>
 

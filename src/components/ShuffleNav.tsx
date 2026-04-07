@@ -3,11 +3,10 @@ import { motion, AnimatePresence } from "framer-motion";
 import { playPop } from "../utils/soundEffects";
 
 interface ShuffleNavProps {
-  onDarkModeToggle: () => void;
   currentSection: string;
 }
 
-export default function ShuffleNav({ onDarkModeToggle, currentSection }: ShuffleNavProps) {
+export default function ShuffleNav({ currentSection }: ShuffleNavProps) {
   const [items, setItems] = useState([
     { id: "hero", label: "Home" },
     { id: "features", label: "Features" },
@@ -73,9 +72,7 @@ export default function ShuffleNav({ onDarkModeToggle, currentSection }: Shuffle
         </AnimatePresence>
       </div>
 
-      <button className="dark-mode-toggle" onClick={onDarkModeToggle}>
-        🌙
-      </button>
+
 
       <AnimatePresence>
         {showTooltip && (

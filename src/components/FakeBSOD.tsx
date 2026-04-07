@@ -31,24 +31,21 @@ export default function FakeBSOD() {
 
     const interval = setInterval(() => {
       setProgress((prev) => {
-        // Get stuck at 95%, then restart, then complete
-        if (prev >= 95 && prev < 100) {
-          // Flicker around 95
-          return 93 + Math.random() * 4;
-        }
+        // Get stuck briefly then complete
+        if (prev >= 98 && prev < 100) return 98 + Math.random() * 2;
         if (prev >= 100) {
           clearInterval(interval);
           return 100;
         }
-        return prev + Math.random() * 3;
+        return prev + Math.random() * 8;
       });
-    }, 150);
+    }, 50);
 
-    // After 5 seconds, force complete
+    // After 3 seconds, force complete
     const forceComplete = setTimeout(() => {
       setProgress(100);
       setPhase("reveal");
-    }, 6000);
+    }, 3000);
 
     return () => {
       clearInterval(interval);
@@ -60,8 +57,8 @@ export default function FakeBSOD() {
   useEffect(() => {
     if (!visible) return;
 
-    // Initial crash → scanning
-    const t1 = setTimeout(() => setPhase("scanning"), 2500);
+    // Initial crash → scanning (faster transition to keep it interesting)
+    const t1 = setTimeout(() => setPhase("scanning"), 800);
 
     // Glitch effect
     const glitchTimer = setInterval(() => {

@@ -135,7 +135,7 @@ export default function PrankWheel() {
               const textR = 95;
 
               return (
-                <div key={i}>
+                <div key={`slice-${i}`}>
                   {/* Slice shape via conic gradient is handled by CSS */}
                   <div
                     className="wheel-label"
@@ -181,8 +181,8 @@ export default function PrankWheel() {
             >
               <div className="result-emoji">{result.emoji}</div>
               <div className="result-text">
-                {result.resultText.split("\n").map((line, i) => (
-                  <p key={i}>{line}</p>
+                {result.resultText.split("\n").map((line, idx) => (
+                  <p key={`line-${idx}`}>{line}</p>
                 ))}
               </div>
               <motion.button

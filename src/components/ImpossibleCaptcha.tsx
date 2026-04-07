@@ -17,7 +17,6 @@ export default function ImpossibleCaptcha() {
   const [checkboxPos, setCheckboxPos] = useState({ x: 0, y: 0 });
   const [checkboxDodges, setCheckboxDodges] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const textInterval = useRef<ReturnType<typeof setInterval>>();
 
   // Show captcha after 25s
   useEffect(() => {
@@ -31,7 +30,7 @@ export default function ImpossibleCaptcha() {
   useEffect(() => {
     if (step === "text") {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%&";
-      textInterval.current = setInterval(() => {
+      const interval = setInterval(() => {
         const len = 6 + Math.floor(Math.random() * 4);
         let result = "";
         for (let i = 0; i < len; i++) {
@@ -39,7 +38,7 @@ export default function ImpossibleCaptcha() {
         }
         setScrambledText(result);
       }, 800);
-      return () => clearInterval(textInterval.current);
+      return () => clearInterval(interval);
     }
   }, [step]);
 
@@ -126,7 +125,7 @@ export default function ImpossibleCaptcha() {
                 <div className="captcha-grid">
                   {fakeImages.map((emoji, idx) => (
                     <motion.button
-                      key={idx}
+                      key={`captcha-img-${idx}`}
                       className={`captcha-img-btn ${selected.includes(idx) ? "selected" : ""}`}
                       onClick={() => handleImageSelect(idx)}
                       whileTap={{ scale: 0.9 }}

@@ -1,4 +1,5 @@
-import { useState, useRef, useCallback, useEffect } from "react";
+import { useState, useCallback, useEffect } from "react";
+import { createPortal } from "react-dom";
 import { motion } from "framer-motion";
 import { playFahh, playHonk } from "../utils/soundEffects";
 
@@ -7,7 +8,6 @@ export default function FloatingHomeButton() {
   const [escapeCount, setEscapeCount] = useState(0);
   const [message, setMessage] = useState("");
   const [caught, setCaught] = useState(false);
-  const btnRef = useRef<HTMLButtonElement>(null);
 
   const escapeMessages = [
     "Nope! 😜",
@@ -41,7 +41,6 @@ export default function FloatingHomeButton() {
   const handleMouseEnter = () => {
     if (caught) return;
 
-    // After 5 escapes, let user catch it
     if (escapeCount >= 5) {
       setCaught(true);
       setMessage(caughtMessages[Math.floor(Math.random() * caughtMessages.length)]);
@@ -55,20 +54,17 @@ export default function FloatingHomeButton() {
     setMessage(escapeMessages[escapeCount % escapeMessages.length]);
     playFahh();
 
-    // Clear message after 1s
     setTimeout(() => setMessage(""), 1000);
   };
 
   const handleClick = () => {
     if (caught) {
-      // Scroll to hero section
       const hero = document.getElementById("hero");
       if (hero) {
         hero.scrollIntoView({ behavior: "smooth" });
       } else {
         window.scrollTo({ top: 0, behavior: "smooth" });
       }
-      // Reset after scrolling
       setTimeout(() => {
         setCaught(false);
         setEscapeCount(0);
@@ -92,14 +88,15 @@ export default function FloatingHomeButton() {
     return () => clearInterval(interval);
   }, [caught]);
 
-  return (
+  // Use createPortal to render directly into document.body
+  // This bypasses ALL parent transforms/overflow/stacking contexts
+  const content = (
     <>
       <motion.button
-        ref={btnRef}
         className={`floating-home-btn ${caught ? "caught" : ""}`}
         animate={{
-          x: position.x + idleOffset.x,
-          y: position.y + idleOffset.y,
+          left: position.x + idleOffset.x,
+          top: position.y + idleOffset.y,
           scale: caught ? [1, 1.2, 1] : 1,
           rotate: caught ? [0, 10, -10, 0] : 0,
         }}
@@ -111,7 +108,11 @@ export default function FloatingHomeButton() {
         onMouseEnter={handleMouseEnter}
         onClick={handleClick}
         whileTap={caught ? { scale: 0.9 } : {}}
-        style={{ position: "fixed", top: 0, left: 0, zIndex: 3000 }}
+        style={{
+          position: "fixed",
+          zIndex: 9998,
+          // No top/left 0 — we animate left/top directly
+        }}
       >
         <span className="home-icon">🏠</span>
         <span className="home-label">{caught ? "Go Home" : "Home"}</span>
@@ -128,7 +129,7 @@ export default function FloatingHomeButton() {
             position: "fixed",
             top: position.y - 50,
             left: position.x,
-            zIndex: 3001,
+            zIndex: 9999,
           }}
         >
           {message}
@@ -148,4 +149,6 @@ export default function FloatingHomeButton() {
       )}
     </>
   );
+
+  return createPortal(content, document.body);
 }

@@ -68,7 +68,7 @@ function FloatingParticles() {
   return (
     <>
       {particles.map((p, i) => (
-        <Float key={i} speed={p.speed * 3} floatIntensity={2} rotationIntensity={1}>
+        <Float key={`hero-particle-${i}`} speed={p.speed * 3} floatIntensity={2} rotationIntensity={1}>
           <mesh position={p.position}>
             <sphereGeometry args={[0.02 + Math.random() * 0.03, 8, 8]} />
             <meshStandardMaterial
@@ -102,11 +102,11 @@ export default function HeroScene() {
         <FloatingEmoji emoji="🃏" position={[0, 2.5, -2]} speed={0.9} />
 
         <Sparkles
-          count={200}
+          count={120}
           scale={10}
-          size={2}
-          speed={0.3}
-          opacity={0.4}
+          size={1.5}
+          speed={0.2}
+          opacity={0.3}
           color="#00ffff"
         />
       </Canvas>
