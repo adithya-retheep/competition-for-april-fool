@@ -38,8 +38,8 @@ const funnyAutoCorrects: Record<string, string> = {
 
 export default function PhantomTyper() {
   const activeInputRef = useRef<HTMLInputElement | HTMLTextAreaElement | null>(null);
-  const ghostTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
-  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout>>();
+  const ghostTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const typingTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
     const handleFocusIn = (e: FocusEvent) => {

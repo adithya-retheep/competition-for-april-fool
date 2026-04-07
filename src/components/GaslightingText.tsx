@@ -1,5 +1,4 @@
 import { useState, useEffect, useRef } from "react";
-import { motion } from "framer-motion";
 
 interface TextVariant {
   original: string;
@@ -94,7 +93,6 @@ export default function GaslightingText() {
     const updateTexts = () => {
       // Find and replace section subtitles
       const subtitles = document.querySelectorAll(".section-subtitle");
-      const titles = document.querySelectorAll(".section-title");
 
       subtitles.forEach((el) => {
         const text = el.textContent || "";

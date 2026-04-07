@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { playFanfare } from "../utils/soundEffects";
 
@@ -48,7 +48,7 @@ interface Coin {
 
 export default function KonamiEasterEgg() {
   const [active, setActive] = useState(false);
-  const [keys, setKeys] = useState<string[]>([]);
+  const [, setKeys] = useState<string[]>([]);
   const [coins, setCoins] = useState<Coin[]>([]);
   const [hintVisible, setHintVisible] = useState(false);
   const coinId = useRef(0);

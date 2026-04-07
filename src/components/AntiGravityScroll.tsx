@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export default function AntiGravityScroll() {
@@ -6,7 +6,6 @@ export default function AntiGravityScroll() {
   const [toastMessage, setToastMessage] = useState("");
   const scrollCount = useRef(0);
   const isReversing = useRef(false);
-  const lastScrollY = useRef(0);
 
   const messages = [
     "⚠️ Gravity Malfunction Detected",
